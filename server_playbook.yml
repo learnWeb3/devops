@@ -58,32 +58,11 @@
         owner: root
       become: true
 
-    - name: copying gitlab ssh private key from gitlab environnement to hosts
+    - name: copying backend project files
       become: true
       copy:
-        src: '{{ ssh_gitlab_private_key }}'
-        dest: ~/.ssh/gitlab
-        owner: root
+        src: '{{ project_dir }}'
+        dest: /app/
         group: root
-        mode: 400
-
-    - name: assiging proper permissions to ssh gitlab private key
-      shell: chmod 400 ~/.ssh/gitlab
-
-    - name: verifying ssh-agent is running 
-      shell:  eval $(ssh-agent)
-
-    - name: adding gitlab ssh private key to host agent
-      shell: ssh-add ~/.ssh/gitlab
-
-    - name: copying backend project files
-      shell: git clone '{{ gitlab_ssh_repository_url }}'
-
-    # - name: copying backend project files
-    #   become: true
-    #   copy:
-    #     src: ./app/back
-    #     dest: /app/
-    #     owner: root
-    #     group: root
-    #     mode: 0644
+        owner: root
+        mode: "0755"
