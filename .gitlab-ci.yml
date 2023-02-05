@@ -8,7 +8,7 @@ variables:
 
 test-back:
   stage: test
-  image: php:latest
+  image: php:7.4
   variables:
     MYSQL_DATABASE: nsa_back
     MYSQL_ROOT_PASSWORD: secret
@@ -24,7 +24,7 @@ test-back:
     # Install dependencies
     - apt-get install git nodejs libcurl4-gnutls-dev libicu-dev libmcrypt-dev libvpx-dev libjpeg-dev libpng-dev libxpm-dev zlib1g-dev libfreetype6-dev libxml2-dev libexpat1-dev libbz2-dev libgmp3-dev libldap2-dev unixodbc-dev libpq-dev libsqlite3-dev libaspell-dev libsnmp-dev libpcre3-dev libtidy-dev -yqq libonig-dev libzip-dev
     # Install php extensions
-    - docker-php-ext-install mbstring pdo_mysql curl intl gd xml zip bz2 opcache
+    - docker-php-ext-install mbstring json pdo_mysql curl intl gd xml zip bz2 opcache
     # Install & enable Xdebug for code coverage reports
     - pecl install xdebug
     - docker-php-ext-enable xdebug
@@ -53,6 +53,9 @@ test-front:
   image: node:12-alpine
   before_script:
     - apk add --no-cache python2 g++ make
+    - apk add chromium
+    - apk add chromium-chromedriver
+    - ENV CHROME_BIN=/usr/bin/chromium-browser 
     - cd "${FRONT_PROJECT_DIR}" && npm i --no-audit --loglevel verbose
   script:
     - cd "${FRONT_PROJECT_DIR}" && npm run test
