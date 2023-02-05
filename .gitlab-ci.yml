@@ -72,7 +72,7 @@ deploy-database:
     - apt install openssh-server -y
     - service ssh start
     - eval $(ssh-agent)
-    - ssh-add "${SSH_VMS_PRIVATE_KEY}"
+    - echo "${SSH_VMS_PRIVATE_KEY}" | ssh-add -
   script: 
     - ansible-playbook --private-key "${SSH_VMS_PRIVATE_KEY}" -u "${ANSIBLE_VMS_REMOTE_USER}" -i "${ANSIBLE_INVENTORY}" "${PLAYBOOK_PATH}" -e ansible_python_interpreter=/usr/bin/python3
 
