@@ -37,22 +37,20 @@ before_script:
   # comment this out if you don't have a node dependency
   - npm install
   # Copy over testing configuration.
-  - cd /app/back
-  - cp .env.testing .env
+  - cd /app/back && cp .env.testing .env
   # Generate an application key. Re-cache.
-  - php artisan key:generate
-  - php artisan config:cache
+  - cd /app/back && php artisan key:generate
+  - cd /app/back && php artisan config:cache
   # Run database migrations.
-  - php artisan migrate
+  - cd /app/back && php artisan migrate
   # Run database seed
-  - php artisan db:seed
+  - cd /app/back && php artisan db:seed
 
 test:
   stage: test
   script:
     # run laravel tests
-    - cd /app/back
-    - php vendor/bin/phpunit --coverage-text --colors=never --env=testing
+    - cd /app/back && php vendor/bin/phpunit --coverage-text --colors=never --env=testing
 
 deploy:
   stage: deploy
