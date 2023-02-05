@@ -1,0 +1,62 @@
+---
+- hosts: database
+  gather_facts: false
+  become: true
+  pre_tasks:
+    - name: "Make sure remote system is initialized correctly"
+      raw: "ln -s /usr/bin/python3 /usr/bin/python"
+      register: set_symlink
+      failed_when: set_symlink.rc != 0 and set_symlink.rc != 1
+  tasks:
+    - name: update repository index
+      apt:
+        update_cache: true
+
+    - name: Upgrade all apt packages
+      apt: upgrade=dist force_apt_get=yes
+
+    - name: install software-properties-common
+      apt:
+        name: software-properties-common
+        state: latest
+
+    - name: install pip3
+      apt: name=python3-pip state=present
+
+    - name: Make sure pymysql is present
+      become: true
+      pip:
+        name: pymysql
+        state: present
+
+    - name: install mysql-server
+      apt:
+        name: mysql-server
+
+    - name: Make mysql server accessible from external hosts
+      shell: grep -q "bind-address = 0.0.0.0" /etc/mysql/mysql.conf.d/mysql.cnf; [ $? -eq 0 ] &&  echo "already present" || echo "bind-address = 0.0.0.0" >> /etc/mysql/mysql.conf.d/mysql.cnf
+
+    - name: Start service mysql, if not started
+      ansible.builtin.service:
+        name: mysql
+        state: started
+
+    - name: Change the authentication plugin of MYSQL root user
+      shell: mysql -u root -pfoobar -e 'UPDATE mysql.user SET plugin="mysql_native_password" WHERE user="root" AND host="localhost"'
+
+    - name: Flush privileges
+      shell: mysql -u root -pfoobar -e 'FLUSH PRIVILEGES'
+
+    # - name: Set MYSQL root password
+    #   mysql_user:
+    #     login_user: root
+    #     login_password: foobar
+    #     name: root
+    #     password: foobar
+    #     state: present
+
+    - name: Make mysql root user available by any hosts
+      shell: mysql -u root -pfoobar -e 'UPDATE mysql.user SET Host="%" WHERE Host="localhost" AND User="root"'
+
+    - name: Flush privileges
+      shell: mysql -u root -pfoobar -e 'FLUSH PRIVILEGES'

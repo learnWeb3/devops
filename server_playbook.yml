@@ -1,0 +1,65 @@
+---
+
+- hosts: backend
+  gather_facts: false
+  become: true
+  pre_tasks:
+    - name: "Make sure remote system is initialized correctly"
+      raw: "ln -s /usr/bin/python3 /usr/bin/python"
+      register: set_symlink
+      failed_when: set_symlink.rc != 0 and set_symlink.rc != 1
+
+  tasks:
+    - name: update repository index
+      apt:
+        update_cache: true
+
+    - name: Upgrade all apt packages
+      apt: upgrade=dist force_apt_get=yes
+
+    - name: install software-properties-common
+      apt:
+        name: software-properties-common
+        state: latest
+
+    - name: Add ppa:ondrej/php repository into sources list
+      ansible.builtin.apt_repository:
+        repo: ppa:ondrej/php
+
+    - name: update repository index
+      apt:
+        update_cache: true
+
+    - name: install php7.4
+      apt:
+        name: php7.4
+
+    - name: install curl
+      apt:
+        name: curl
+
+    - name: Download and install Composer
+      shell: curl -sS https://getcomposer.org/installer | php
+      args:
+        chdir: /usr/src/
+        creates: /usr/local/bin/composer
+      become: true
+
+    - name: Add Composer to global path
+      copy:
+        dest: /usr/local/bin/composer
+        group: root
+        mode: "0755"
+        owner: root
+        src: /usr/src/composer.phar
+        remote_src: true
+      become: true
+
+    - name: copying backend project files
+      become: true
+      copy:
+        src: ./app/back
+        dest: /app/
+        owner: root
+        group: root
+        mode: 0644
