@@ -63,12 +63,19 @@
       copy:
         src: '{{ ssh_gitlab_private_key }}'
         dest: ~/.ssh/gitlab
+        remote_src: true
         owner: root
         group: root
-        mode: 0644
+        mode: 400
+
+    - name: assiging proper permissions to ssh gitlab private key
+      shell: chmod 400 ~/.ssh/gitlab
+
+    - name: verifying ssh-agent is running 
+      shell:  eval $(ssh-agent)
 
     - name: adding gitlab ssh private key to host agent
-      shell: eval $(ssh-agent) && ssh-add ~/.ssh/gitlab
+      shell: ssh-add ~/.ssh/gitlab
 
     - name: copying backend project files
       shell: git clone '{{ gitlab_ssh_repository_url }}'
