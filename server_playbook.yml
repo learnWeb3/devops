@@ -1,5 +1,4 @@
 ---
-
 - hosts: backend
   gather_facts: false
   become: true
@@ -38,6 +37,10 @@
       apt:
         name: curl
 
+    - name: install git
+      apt:
+        name: git
+
     - name: Download and install Composer
       shell: curl -sS https://getcomposer.org/installer | php
       args:
@@ -55,11 +58,26 @@
         remote_src: true
       become: true
 
-    - name: copying backend project files
+    - name: copying gitlab ssh private key from gitlab environnement to hosts
       become: true
       copy:
-        src: ./app/back
-        dest: /app/
+        src: '{{ ssh_gitlab_private_key }}'
+        dest: ~/.ssh/gitlab
         owner: root
         group: root
         mode: 0644
+
+    - name: adding gitlab ssh private key to host agent
+      shell: eval $(ssh-agent) && ssh-add ~/.ssh/gitlab
+
+    - name: copying backend project files
+      shell: git clone '{{ gitlab_ssh_repository_url }}'
+
+    # - name: copying backend project files
+    #   become: true
+    #   copy:
+    #     src: ./app/back
+    #     dest: /app/
+    #     owner: root
+    #     group: root
+    #     mode: 0644
