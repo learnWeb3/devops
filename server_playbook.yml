@@ -50,12 +50,12 @@
 
     - name: Add Composer to global path
       copy:
+        src: /usr/src/composer.phar
         dest: /usr/local/bin/composer
+        remote_src: true
         group: root
         mode: "0755"
         owner: root
-        src: /usr/src/composer.phar
-        remote_src: true
       become: true
 
     - name: copying gitlab ssh private key from gitlab environnement to hosts
@@ -63,7 +63,6 @@
       copy:
         src: '{{ ssh_gitlab_private_key }}'
         dest: ~/.ssh/gitlab
-        remote_src: true
         owner: root
         group: root
         mode: 400
