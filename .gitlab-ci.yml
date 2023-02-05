@@ -1,5 +1,5 @@
 stages:
-  - test-back
+  - test
   - deploy
 
 variables:
