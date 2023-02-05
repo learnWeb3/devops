@@ -68,25 +68,25 @@
         mode: "0755"
 
     - name: Installing php project dependencies
-      shell: cd '{{ project_dir }}' && composer install
+      shell: cd /app/ && composer install
 
     - name: Updating php project dependencies (composer.lock file)
-      shell: cd '{{ project_dir }}' && composer update
+      shell: cd /app/ && composer update
 
     # - name: Installing Node JS dependencies
-    #   shell: cd '{{ project_dir }}' && npm install
+    #   shell: cd /app/ && npm install
 
     - name: Copy over environnement variables.
-      shell: cd '{{ project_dir }}' && cp .env.example .env
+      shell: cd /app/ && cp .env.example .env
 
     - name: "Generate an application key."
-      shell: cd '{{ project_dir }}' && php artisan key:generate
+      shell: cd /app/ && php artisan key:generate
 
     - name: Re-cache.
-      shell: cd '{{ project_dir }}' && php artisan config:cache
+      shell: cd /app/ && php artisan config:cache
 
     - name: Run database migrations.
-      shell: cd '{{ project_dir }}' && php artisan migrate
+      shell: cd /app/ && php artisan migrate
 
     - name: Run database seed
-      shell: cd '{{ project_dir }}' && php artisan db:seed
+      shell: cd /app/ && php artisan db:seed
