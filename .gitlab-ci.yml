@@ -63,13 +63,15 @@ variables:
 
 deploy-database:
   stage: deploy-database
-  image: williamyeh/ansible:ubuntu18.04
+  image: ubuntu:22.04
   variables:
     PLAYBOOK_PATH: "${CI_PROJECT_DIR}/database_playbook.yml"
   before_script:
+    - apt-add-repository ppa:ansible/ansible
     - apt update
     - apt install openssh-client -y
     - apt install openssh-server -y
+    - apt install ansible -y 
     - service ssh start
     - eval $(ssh-agent)
     - chmod 400 "${SSH_VMS_PRIVATE_KEY}"
