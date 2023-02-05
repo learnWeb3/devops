@@ -29,6 +29,7 @@ test-back:
     - curl -sS https://getcomposer.org/installer | php
     - mv composer.phar /usr/local/bin/composer
     - cd "${BACK_PROJECT_DIR}" && composer install
+     - cd "${BACK_PROJECT_DIR}" && composer update
     # Install Node dependencies.
     # comment this out if you don't have a node dependency
     - cd "${BACK_PROJECT_DIR}" && npm install
