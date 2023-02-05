@@ -101,7 +101,6 @@ deploy-server:
     - service ssh start
     - eval $(ssh-agent)
     - chmod 400 "${SSH_VMS_PRIVATE_KEY}"
-    - chmod 400 "${SSH_GITLAB_PRIVATE_KEY}"
     - ssh-add "${SSH_VMS_PRIVATE_KEY}"
   script:
     - ansible-playbook --private-key "${SSH_VMS_PRIVATE_KEY}" -u "${ANSIBLE_VMS_REMOTE_USER}" -i "${ANSIBLE_INVENTORY}" -e "ansible_python_interpreter=/usr/bin/python3 project_dir=${BACK_PROJECT_DIR} "${PLAYBOOK_PATH}"
