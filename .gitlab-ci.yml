@@ -45,7 +45,7 @@ test-back:
     - cd "${BACK_PROJECT_DIR}" && php artisan db:seed
   script:
     # run laravel tests
-    - cd "${BACK_PROJECT_DIR}" && php vendor/bin/phpunit --coverage-text --colors=never --env=testing
+    - cd "${BACK_PROJECT_DIR}" && php vendor/bin/phpunit --coverage-text --colors=never
 
 test-front:
   stage: test
