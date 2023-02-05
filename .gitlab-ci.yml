@@ -1,56 +1,59 @@
 stages:
-  - test
+  - test-back
   - deploy
 
-image: php:latest
-services:
-  - mysql:latest
-
 variables:
-  MYSQL_DATABASE: nsa_back
-  MYSQL_ROOT_PASSWORD: secret
+  BACK_PROJECT_DIR: "${BACK_PROJECT_DIR}"
+  FRONT_PROJECT_DIR: "${CI_PROJECT_DIR}/app/front"
 
-# This folder is cached between builds
-# https://docs.gitlab.com/ee/ci/yaml/index.html#cache
-cache:
-  paths:
-    - vendor/
-    - node_modules/
-before_script:
-  # Update packages
-  - apt-get update -yqq
-  # Prep for Node
-  - apt-get install gnupg -yqq
-  # Upgrade to Node 8
-  - curl -sL https://deb.nodesource.com/setup_16.x | bash -
-  # Install dependencies
-  - apt-get install git nodejs libcurl4-gnutls-dev libicu-dev libmcrypt-dev libvpx-dev libjpeg-dev libpng-dev libxpm-dev zlib1g-dev libfreetype6-dev libxml2-dev libexpat1-dev libbz2-dev libgmp3-dev libldap2-dev unixodbc-dev libpq-dev libsqlite3-dev libaspell-dev libsnmp-dev libpcre3-dev libtidy-dev -yqq libonig-dev libzip-dev
-  # Install php extensions
-  - docker-php-ext-install mbstring pdo_mysql curl intl gd xml zip bz2 opcache
-  # Install & enable Xdebug for code coverage reports
-  - pecl install xdebug
-  - docker-php-ext-enable xdebug
-  # Install Composer and project dependencies.
-  - curl -sS https://getcomposer.org/installer | php
-  - cd /app/back && php composer.phar install
-  # Install Node dependencies.
-  # comment this out if you don't have a node dependency
-  - npm install
-  # Copy over testing configuration.
-  - cd /app/back && cp .env.testing .env
-  # Generate an application key. Re-cache.
-  - cd /app/back && php artisan key:generate
-  - cd /app/back && php artisan config:cache
-  # Run database migrations.
-  - cd /app/back && php artisan migrate
-  # Run database seed
-  - cd /app/back && php artisan db:seed
-
-test:
+test-back:
   stage: test
+  image: php:latest
+  variables:
+    MYSQL_DATABASE: nsa_back
+    MYSQL_ROOT_PASSWORD: secret
+  services:
+    - mysql:latest
+  before_script:
+    # Update packages
+    - apt-get update -yqq
+    # Prep for Node
+    - apt-get install gnupg -yqq
+    # Upgrade to Node 8
+    - curl -sL https://deb.nodesource.com/setup_16.x | bash -
+    # Install dependencies
+    - apt-get install git nodejs libcurl4-gnutls-dev libicu-dev libmcrypt-dev libvpx-dev libjpeg-dev libpng-dev libxpm-dev zlib1g-dev libfreetype6-dev libxml2-dev libexpat1-dev libbz2-dev libgmp3-dev libldap2-dev unixodbc-dev libpq-dev libsqlite3-dev libaspell-dev libsnmp-dev libpcre3-dev libtidy-dev -yqq libonig-dev libzip-dev
+    # Install php extensions
+    - docker-php-ext-install mbstring pdo_mysql curl intl gd xml zip bz2 opcache
+    # Install & enable Xdebug for code coverage reports
+    - pecl install xdebug
+    - docker-php-ext-enable xdebug
+    # Install Composer and project dependencies.
+    - curl -sS https://getcomposer.org/installer | php
+    - cd "${BACK_PROJECT_DIR}" && php composer.phar install
+    # Install Node dependencies.
+    # comment this out if you don't have a node dependency
+    - cd "${BACK_PROJECT_DIR}" && npm install
+    # Copy over testing configuration.
+    - cd "${BACK_PROJECT_DIR}" && cp .env.testing .env
+    # Generate an application key. Re-cache.
+    - cd "${BACK_PROJECT_DIR}" && php artisan key:generate
+    - cd "${BACK_PROJECT_DIR}" && php artisan config:cache
+    # Run database migrations.
+    - cd "${BACK_PROJECT_DIR}" && php artisan migrate
+    # Run database seed
+    - cd "${BACK_PROJECT_DIR}" && php artisan db:seed
   script:
     # run laravel tests
-    - cd /app/back && php vendor/bin/phpunit --coverage-text --colors=never --env=testing
+    - cd "${BACK_PROJECT_DIR}" && php vendor/bin/phpunit --coverage-text --colors=never --env=testing
+
+test-front:
+  stage: test
+  image: node:16-slim
+  before_script:
+    - cd "${FRONT_PROJECT_DIR}" && npm i --no-audit --loglevel verbose
+  script:
+    - cd "${FRONT_PROJECT_DIR}" && npm run test
 
 deploy:
   stage: deploy
