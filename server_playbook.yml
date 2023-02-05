@@ -61,8 +61,32 @@
     - name: copying backend project files
       become: true
       copy:
-        src: '{{ project_dir }}'
+        src: "{{ project_dir }}"
         dest: /app/
         group: root
         owner: root
         mode: "0755"
+
+    - name: Installing php project dependencies
+      shell: cd '{{ project_dir }}' && composer install
+
+    - name: Updating php project dependencies (composer.lock file)
+      shell: cd '{{ project_dir }}' && composer update
+
+    # - name: Installing Node JS dependencies
+    #   shell: cd '{{ project_dir }}' && npm install
+
+    - name: Copy over environnement variables.
+      shell: cd '{{ project_dir }}' && cp .env.example .env
+
+    - name: "Generate an application key."
+      shell: cd '{{ project_dir }}' && php artisan key:generate
+
+    - name: Re-cache.
+      shell: cd '{{ project_dir }}' && php artisan config:cache
+
+    - name: Run database migrations.
+      shell: cd '{{ project_dir }}' && php artisan migrate
+
+    - name: Run database seed
+      shell: cd '{{ project_dir }}' && php artisan db:seed
