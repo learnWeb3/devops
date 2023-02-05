@@ -75,7 +75,7 @@ deploy-database:
     - chmod 400 "${SSH_VMS_PRIVATE_KEY}"
     - ssh-add "${SSH_VMS_PRIVATE_KEY}"
   script: 
-    - ansible-playbook --private-key "${SSH_VMS_PRIVATE_KEY}" -u "${ANSIBLE_VMS_REMOTE_USER}" -i "${ANSIBLE_INVENTORY}" "${PLAYBOOK_PATH}" -e ansible_python_interpreter=/usr/bin/python3
+    - ansible-playbook --private-key "${SSH_VMS_PRIVATE_KEY}" -u "${ANSIBLE_VMS_REMOTE_USER}" -i "${ANSIBLE_INVENTORY}" -e ansible_python_interpreter=/usr/bin/python3 "${PLAYBOOK_PATH}"
 
 # deploy-server:
 #   stage: deploy-database
