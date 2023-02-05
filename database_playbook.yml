@@ -41,22 +41,24 @@
         name: mysql
         state: started
 
-    - name: Change the authentication plugin of MYSQL root user
-      shell: mysql -u root -pfoobar -e 'UPDATE mysql.user SET plugin="mysql_native_password" WHERE user="root" AND host="localhost"'
+    - name: Create mysql user if not exists
+      shell: mysql -u root -e 'CREATE USER IF NOT EXISTS "admin"@"%" IDENTIFIED WITH mysql_native_password BY "foobar"';
 
-    - name: Flush privileges
-      shell: mysql -u root -pfoobar -e 'FLUSH PRIVILEGES'
+    # - name: Change the authentication plugin of MYSQL admin user
+    #   shell: mysql -u root -e 'UPDATE mysql.user SET plugin="mysql_native_password" WHERE user="admin" AND host="%"'
 
     # - name: Set MYSQL root password
     #   mysql_user:
-    #     login_user: root
+    #     login_user: admin
     #     login_password: foobar
     #     name: root
-    #     password: foobar
     #     state: present
 
-    - name: Make mysql root user available by any hosts
-      shell: mysql -u root -pfoobar -e 'UPDATE mysql.user SET Host="%" WHERE Host="localhost" AND User="root"'
-
     - name: Flush privileges
-      shell: mysql -u root -pfoobar -e 'FLUSH PRIVILEGES'
+      shell: mysql -u root -e 'FLUSH PRIVILEGES'
+
+    # - name: Make mysql root user available by any hosts
+    #   shell: mysql -u root -pfoobar -e 'UPDATE mysql.user SET Host="%" WHERE Host="localhost" AND User="root"'
+
+    # - name: Flush privileges
+    #   shell: mysql -u root -pfoobar -e 'FLUSH PRIVILEGES'

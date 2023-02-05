@@ -1,4 +1,4 @@
 [database]
-192.168.94.128
+34.155.7.5 ansible_become_password=foobar
 [backend]
-192.168.94.129
+192.168.94.129 ansible_become_password=foobar
