@@ -68,7 +68,7 @@ deploy-database:
     PLAYBOOK_PATH: "${CI_PROJECT_DIR}/database_playbook.yml"
   before_script:
     - apt update
-    - apt install software-properties-common
+    - apt install software-properties-common -y
     - apt update 
     - apt-add-repository ppa:ansible/ansible
     - apt update
