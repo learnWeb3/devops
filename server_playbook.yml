@@ -87,6 +87,10 @@
         owner: "{{ vms_remote_user }}"
         mode: "0755"
 
+    - name: ensuring backend project files have correct user and group
+      become: true
+      shell: chown -R $USER /app/
+
     - name: Installing php project dependencies
       become: true
       become_user: "{{ vms_remote_user }}"
