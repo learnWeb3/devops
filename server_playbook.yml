@@ -37,9 +37,25 @@
       apt:
         name: curl
 
-    - name: install git
+    - name: install php-curl
       apt:
-        name: git
+        name: php7.4-curl
+
+    - name: install mbstring
+      apt:
+        name: php-mbstring
+
+    - name: install php-xml
+      apt:
+        name: php-xml
+
+    - name: install php-json
+      apt:
+        name: php-json
+
+    - name: install php-zip
+      apt:
+        name: php-zip
 
     - name: Download and install Composer
       shell: curl -sS https://getcomposer.org/installer | php
