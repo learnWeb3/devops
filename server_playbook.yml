@@ -43,19 +43,22 @@
 
     - name: install mbstring
       apt:
-        name: php-mbstring
+        name: php7.4-mbstring
 
     - name: install php-xml
       apt:
-        name: php-xml
+        name: php7.4-xml
 
     - name: install php-json
       apt:
-        name: php-json
+        name: php7.4-json
 
     - name: install php-zip
       apt:
-        name: php-zip
+        name: php7.4-zip
+
+    - name: ensure php 7.4 is used by the system
+      shell: sudo update-alternatives --set php /usr/bin/php7.4
 
     - name: Download and install Composer
       shell: curl -sS https://getcomposer.org/installer | php
