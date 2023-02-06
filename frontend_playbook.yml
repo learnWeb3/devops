@@ -89,3 +89,9 @@
     - name: ensuring frontend project files have correct permissions
       become: true
       shell: chmod -R 777 /app/
+
+    - name: Installing frontend project dependencies
+      become: true
+      become_user: "{{ vms_remote_user }}"
+      shell: cd /app/front && npm i --loglevel verbose
+      
