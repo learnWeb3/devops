@@ -85,11 +85,11 @@
         dest: /app/
         group: "{{ vms_remote_user }}"
         owner: "{{ vms_remote_user }}"
-        mode: "0755"
+        mode: "0777"
 
     - name: ensuring backend project files have correct user and group
       become: true
-      shell: chown -R $USER /app/
+      shell: chmod -R 777 /app/
 
     - name: Installing php project dependencies
       become: true
