@@ -57,6 +57,10 @@
       apt:
         name: php7.4-zip
 
+    - name: install php-mysql
+      apt:
+        name: php7.4-mysql
+
     - name: ensure php 7.4 is used by the system
       become: true
       shell: update-alternatives --set php /usr/bin/php7.4
