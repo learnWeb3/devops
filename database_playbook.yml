@@ -50,3 +50,5 @@
     - name: Flush privileges
       shell: mysql -u root -e 'FLUSH PRIVILEGES;'
 
+    - name: Create database
+      shell: mysql -u root -e "CREATE DATABASE IF NOT EXISTS {{ database_name }} CHARACTER SET {{ database_charset }} COLLATE {{ database_collation }};"
