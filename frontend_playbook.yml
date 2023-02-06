@@ -8,7 +8,6 @@
       register: set_symlink
       failed_when: set_symlink.rc != 0 and set_symlink.rc != 1
   tasks:
-  
     - name: update packages
       become: true
       shell: apt update
@@ -70,17 +69,13 @@
         name: nodejs
         state: present
 
-    - name: Install npm
-      apt:
-        name: npm
-        state: present
+    - name: update packages
+      become: true
+      shell: apt update
 
-    - name: update repository index
-      apt:
-        update_cache: true
-
-    - name: Upgrade all apt packages
-      apt: upgrade=dist force_apt_get=yes
+    - name: upgrade packages
+      become: true
+      shell: apt upgrade -y
 
     - name: copying frontend project files
       become: true
