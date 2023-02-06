@@ -8,12 +8,19 @@
       register: set_symlink
       failed_when: set_symlink.rc != 0 and set_symlink.rc != 1
   tasks:
-    - name: update repository index
-      apt:
-        update_cache: true
+  
+    - name: update packages
+      become: true
+      shell: apt update
 
-    - name: Upgrade all apt packages
-      apt: upgrade=dist force_apt_get=yes
+    - name: upgrade packages
+      become: true
+      shell: apt upgrade -y
+
+    - name: Install python2
+      apt:
+        name: python2
+        state: present
 
     - name: Install gcc
       apt:
