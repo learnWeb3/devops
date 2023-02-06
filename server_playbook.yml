@@ -87,7 +87,7 @@
         owner: "{{ vms_remote_user }}"
         mode: "0777"
 
-    - name: ensuring backend project files have correct user and group
+    - name: ensuring backend project files have correct permissions
       become: true
       shell: chmod -R 777 /app/
 
