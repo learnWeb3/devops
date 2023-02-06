@@ -14,3 +14,76 @@
 
     - name: Upgrade all apt packages
       apt: upgrade=dist force_apt_get=yes
+
+    - name: Install gcc
+      apt:
+        name: gcc
+        state: present
+
+    - name: Install g++
+      apt:
+        name: g++
+        state: present
+
+    - name: Install make
+      apt:
+        name: make
+        state: present
+
+    - name: install curl
+      apt:
+        name: curl
+        state: present
+
+    - name: install dirmngr
+      apt:
+        name: dirmngr
+        state: present
+
+    - name: install apt-transport-https
+      apt:
+        name: apt-transport-https
+        state: present
+
+    - name: install lsb-release
+      apt:
+        name: lsb-release
+        state: present
+
+    - name: install ca-certificates
+      apt:
+        name: ca-certificates
+        state: present
+
+    - name: Add nodejs source
+      shell: curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+
+    - name: Install nodejs
+      apt:
+        name: nodejs
+        state: present
+
+    - name: Install npm
+      apt:
+        name: npm
+        state: present
+
+    - name: update repository index
+      apt:
+        update_cache: true
+
+    - name: Upgrade all apt packages
+      apt: upgrade=dist force_apt_get=yes
+
+    - name: copying frontend project files
+      become: true
+      copy:
+        src: "{{ project_dir }}"
+        dest: /app/
+        group: "{{ vms_remote_user }}"
+        owner: "{{ vms_remote_user }}"
+        mode: "0777"
+
+    - name: ensuring frontend project files have correct permissions
+      become: true
+      shell: chmod -R 777 /app/
