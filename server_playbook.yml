@@ -70,37 +70,37 @@
     - name: Installing php project dependencies
       become: true
       become_user: "{{ vms_remote_user }}"
-      shell: cd /app/ && composer install
+      shell: cd /app/back && composer install
 
     - name: Updating php project dependencies (composer.lock file)
       become: true
       become_user: "{{ vms_remote_user }}"
-      shell: cd /app/ && composer update
+      shell: cd /app/back && composer update
 
     # - name: Installing Node JS dependencies
-    #   shell: cd /app/ && npm install
+    #   shell: cd /app/back && npm install
 
     - name: Copy over environnement variables.
       become: true
       become_user: "{{ vms_remote_user }}"
-      shell: cd /app/ && cp .env.example .env
+      shell: cd /app/back && cp .env.example .env
 
     - name: Generate an application key.
       become: true
       become_user: "{{ vms_remote_user }}"
-      shell: cd /app/ && php artisan key:generate
+      shell: cd /app/back && php artisan key:generate
 
     - name: Re-cache.
       become: true
       become_user: "{{ vms_remote_user }}"
-      shell: cd /app/ && php artisan config:cache
+      shell: cd /app/back && php artisan config:cache
 
     - name: Run database migrations.
       become: true
       become_user: "{{ vms_remote_user }}"
-      shell: cd /app/ && php artisan migrate
+      shell: cd /app/back && php artisan migrate
 
     - name: Run database seed
       become: true
       become_user: "{{ vms_remote_user }}"
-      shell: cd /app/ && php artisan db:seed
+      shell: cd /app/back && php artisan db:seed
