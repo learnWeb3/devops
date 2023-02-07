@@ -150,6 +150,18 @@
         state: present
         install_recommends: yes
 
+    - name: Install certbot if not present
+      apt:
+        name: certbot
+        state: present
+        install_recommends: yes
+
+    - name: Install python3-certbot-nginx if not present
+      apt:
+        name: python3-certbot-nginx
+        state: present
+        install_recommends: yes
+
     - name: Make sure apache service is stopped
       become: true
       shell: apachectl stop
@@ -185,3 +197,4 @@
       ansible.builtin.service:
         name: nginx
         state: restarted
+

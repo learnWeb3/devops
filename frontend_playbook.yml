@@ -101,10 +101,6 @@
         state: present
         install_recommends: yes
 
-    - name: Make sure apache service is stopped
-      become: true
-      shell: apachectl stop
-
     - name: Make sure a nginx service is running
       ansible.builtin.systemd:
         state: started
