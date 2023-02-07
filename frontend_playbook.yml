@@ -153,4 +153,4 @@
 
     - name: Generate site SSL certificates using certbot
       become: true
-      shell: certbot --nginx --no-redirect --keep-until-expiring -d nsa-frontend.students-epitech.ovh
+      shell: certbot --nginx --noninteractive --agree-tos -m antoine.le-guillou@epitech.eu --no-redirect --keep-until-expiring -d nsa-frontend.students-epitech.ovh
