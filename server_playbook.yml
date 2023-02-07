@@ -198,3 +198,6 @@
         name: nginx
         state: restarted
 
+    - name: Generate site SSL certificates using certbot
+      become: true
+      shell: certbot --nginx--no-redirect --keep-until-expiring -d nsa-server.students-epitech.ovh
