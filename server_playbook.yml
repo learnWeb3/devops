@@ -32,34 +32,47 @@
     - name: install php7.4
       apt:
         name: php7.4
+        state: present
 
     - name: install curl
       apt:
         name: curl
+        state: present
+
+    - name: install php-fpm
+      apt:
+        name: php7.4-fpm
+        state: present
 
     - name: install php-curl
       apt:
         name: php7.4-curl
+        state: present
 
     - name: install mbstring
       apt:
         name: php7.4-mbstring
+        state: present
 
     - name: install php-xml
       apt:
         name: php7.4-xml
+        state: present
 
     - name: install php-json
       apt:
         name: php7.4-json
+        state: present
 
     - name: install php-zip
       apt:
         name: php7.4-zip
+        state: present
 
     - name: install php-mysql
       apt:
         name: php7.4-mysql
+        state: present
 
     - name: ensure php 7.4 is used by the system
       become: true
@@ -132,3 +145,45 @@
       become: true
       become_user: "{{ vms_remote_user }}"
       shell: cd /app/back && php artisan db:seed
+
+    - name: Install nginx if not present
+      apt:
+        name: nginx
+        state: present
+        install_recommends: yes
+
+    - name: Make sure apache service is stopped
+      become: true
+      shell: apachectl stop
+
+    - name: Make sure a nginx service is running
+      ansible.builtin.systemd:
+        state: started
+        name: nginx
+
+    - name: Copy nginx server configuration to host in /etc/nginx/sites-available/ folder
+      become: true
+      copy:
+        src: "{{ nginx_conf }}"
+        dest: /etc/nginx/sites-available/
+        group: "{{ vms_remote_user }}"
+        owner: "{{ vms_remote_user }}"
+        mode: "0777"
+
+    - name: Symlink nginx server configuration to /etc/nginx/sites-enabled/
+      become: true
+      shell: ln -s /etc/nginx/sites-available/server /etc/nginx/sites-enabled/
+
+    - name: Confirm the configuration does not contain any syntax errors
+      become: true
+      shell: nginx -t
+
+    - name: Restart service php7.4-fpm
+      ansible.builtin.service:
+        name: php7.4-fpm
+        state: restarted
+
+    - name: Restart service nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
