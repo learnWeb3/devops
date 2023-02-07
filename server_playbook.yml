@@ -172,7 +172,7 @@
 
     - name: Symlink nginx server configuration to /etc/nginx/sites-enabled/
       become: true
-      shell: ln -s /etc/nginx/sites-available/server /etc/nginx/sites-enabled/
+      shell: ln -sf /etc/nginx/sites-available/server /etc/nginx/sites-enabled/
 
     - name: Confirm the configuration does not contain any syntax errors
       become: true
