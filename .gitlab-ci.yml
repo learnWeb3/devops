@@ -63,19 +63,10 @@ variables:
 
 # deploy-database:
 #   stage: deploy-database
-#   image: ubuntu:22.04
+#   image: antoineleguillou/nsa-ansible:2.14.1
 #   variables:
 #     PLAYBOOK_PATH: "${CI_PROJECT_DIR}/database_playbook.yml"
 #   before_script:
-#     - apt update
-#     - apt install software-properties-common -y
-#     - apt update
-#     - apt-add-repository ppa:ansible/ansible
-#     - apt update
-#     - apt install openssh-client -y
-#     - apt install openssh-server -y
-#     - apt install ansible -y
-#     - apt update
 #     - service ssh start
 #     - eval $(ssh-agent)
 #     - chmod 400 "${SSH_VMS_PRIVATE_KEY}"
@@ -85,19 +76,10 @@ variables:
 
 # deploy-server:
 #   stage: deploy-server
-#   image: ubuntu:22.04
+#   image: antoineleguillou/nsa-ansible:2.14.1
 #   variables:
 #     PLAYBOOK_PATH: "${CI_PROJECT_DIR}/server_playbook.yml"
 #   before_script:
-#     - apt update
-#     - apt install software-properties-common -y
-#     - apt update
-#     - apt-add-repository ppa:ansible/ansible
-#     - apt update
-#     - apt install openssh-client -y
-#     - apt install openssh-server -y
-#     - apt install ansible -y
-#     - apt update
 #     - service ssh start
 #     - eval $(ssh-agent)
 #     - chmod 400 "${SSH_VMS_PRIVATE_KEY}"
@@ -107,19 +89,10 @@ variables:
 
 # rollback-database:
 #   stage: deploy-server
-#   image: ubuntu:22.04
+#   image: antoineleguillou/nsa-ansible:2.14.1
 #   variables:
 #     PLAYBOOK_PATH: "${CI_PROJECT_DIR}/rollback_database_playbook.yml"
 #   before_script:
-#     - apt update
-#     - apt install software-properties-common -y
-#     - apt update
-#     - apt-add-repository ppa:ansible/ansible
-#     - apt update
-#     - apt install openssh-client -y
-#     - apt install openssh-server -y
-#     - apt install ansible -y
-#     - apt update
 #     - service ssh start
 #     - eval $(ssh-agent)
 #     - chmod 400 "${SSH_VMS_PRIVATE_KEY}"
@@ -131,19 +104,10 @@ variables:
 
 deploy-frontend:
   stage: deploy-frontend
-  image: ubuntu:22.04
+  image: antoineleguillou/nsa-ansible:2.14.1
   variables:
     PLAYBOOK_PATH: "${CI_PROJECT_DIR}/frontend_playbook.yml"
   before_script:
-    - apt update
-    - apt install software-properties-common -y
-    - apt update
-    - apt-add-repository ppa:ansible/ansible
-    - apt update
-    - apt install openssh-client -y
-    - apt install openssh-server -y
-    - apt install ansible -y
-    - apt update
     - service ssh start
     - eval $(ssh-agent)
     - chmod 400 "${SSH_VMS_PRIVATE_KEY}"
