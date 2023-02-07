@@ -146,6 +146,7 @@
 
     - name: Delete frontend application running process
       shell: cd /app/front && pm2 delete frontend
+      ignore_errors: yes
 
     - name: Start frontend application
       shell: cd /app/front && pm2 --name frontend start npm -- start

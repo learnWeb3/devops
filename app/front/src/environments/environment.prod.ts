@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  api_endpoint: "/api",
+  api_endpoint: "https://nsa-server.students-epitech.ovh/api",
 };
