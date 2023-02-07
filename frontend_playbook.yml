@@ -94,3 +94,43 @@
       become: true
       become_user: "{{ vms_remote_user }}"
       shell: cd /app/front && npm i --loglevel verbose
+
+    - name: Install nginx if not present
+      apt:
+        name: nginx
+        state: present
+        install_recommends: yes
+
+    - name: Make sure apache service is stopped
+      become: true
+      shell: apachectl stop
+
+    - name: Make sure a nginx service is running
+      ansible.builtin.systemd:
+        state: started
+        name: nginx
+
+    - name: Copy nginx frontend configuration to host in /etc/nginx/sites-available/ folder
+      become: true
+      copy:
+        src: "{{ nginx_conf }}"
+        dest: /etc/nginx/sites-available/
+        group: "{{ vms_remote_user }}"
+        owner: "{{ vms_remote_user }}"
+        mode: "0777"
+
+    - name: Symlink nginx frontend configuration to /etc/nginx/sites-enabled/
+      become: true
+      shell: ln -sf /etc/nginx/sites-available/frontend /etc/nginx/sites-enabled/
+
+    - name: Confirm the configuration does not contain any syntax errors
+      become: true
+      shell: nginx -t
+
+    - name: Restart service nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+
+    - name: Start frontend application
+      shell: cd /app/front && npm run start

@@ -74,19 +74,19 @@ variables:
 #   script:
 #     - ansible-playbook --private-key "${SSH_VMS_PRIVATE_KEY}" -u "${ANSIBLE_VMS_REMOTE_USER}" -i "${ANSIBLE_INVENTORY}" -e "ansible_python_interpreter=/usr/bin/python3 database_name=${DATABASE_NAME} database_charset=${DATABASE_CHARSET} database_collation=${DATABASE_COLLATION}" "${PLAYBOOK_PATH}"
 
-deploy-server:
-  stage: deploy-server
-  image: antoineleguillou/nsa-ansible:2.14.1
-  variables:
-    PLAYBOOK_PATH: "${CI_PROJECT_DIR}/server_playbook.yml"
-    NGINX_CONF: "${CI_PROJECT_DIR}/nginx/server"
-  before_script:
-    - service ssh start
-    - eval $(ssh-agent)
-    - chmod 400 "${SSH_VMS_PRIVATE_KEY}"
-    - ssh-add "${SSH_VMS_PRIVATE_KEY}"
-  script:
-    - ansible-playbook --private-key "${SSH_VMS_PRIVATE_KEY}" -u "${ANSIBLE_VMS_REMOTE_USER}" -i "${ANSIBLE_INVENTORY}" -e "ansible_python_interpreter=/usr/bin/python3 nginx_conf=${NGINX_CONF} project_dir=${BACK_PROJECT_DIR} vms_remote_user=${ANSIBLE_VMS_REMOTE_USER}" "${PLAYBOOK_PATH}"
+# deploy-server:
+#   stage: deploy-server
+#   image: antoineleguillou/nsa-ansible:2.14.1
+#   variables:
+#     PLAYBOOK_PATH: "${CI_PROJECT_DIR}/server_playbook.yml"
+#     NGINX_CONF: "${CI_PROJECT_DIR}/nginx/server"
+#   before_script:
+#     - service ssh start
+#     - eval $(ssh-agent)
+#     - chmod 400 "${SSH_VMS_PRIVATE_KEY}"
+#     - ssh-add "${SSH_VMS_PRIVATE_KEY}"
+#   script:
+#     - ansible-playbook --private-key "${SSH_VMS_PRIVATE_KEY}" -u "${ANSIBLE_VMS_REMOTE_USER}" -i "${ANSIBLE_INVENTORY}" -e "ansible_python_interpreter=/usr/bin/python3 nginx_conf=${NGINX_CONF} project_dir=${BACK_PROJECT_DIR} vms_remote_user=${ANSIBLE_VMS_REMOTE_USER}" "${PLAYBOOK_PATH}"
 
 # rollback-database:
 #   stage: deploy-server
@@ -103,16 +103,16 @@ deploy-server:
 #   rules:
 #     - if: $CI_MERGE_REQUEST_APPROVED && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == $DATABASE_ROLLBACK_BRANCH_NAME && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $PROJECT_MAIN_BRANCH_NAME
 
-# deploy-frontend:
-#   stage: deploy-frontend
-#   image: antoineleguillou/nsa-ansible:2.14.1
-#   variables:
-#     PLAYBOOK_PATH: "${CI_PROJECT_DIR}/frontend_playbook.yml"
-#     NGINX_CONF: "${CI_PROJECT_DIR}/nginx/server"
-#   before_script:
-#     - service ssh start
-#     - eval $(ssh-agent)
-#     - chmod 400 "${SSH_VMS_PRIVATE_KEY}"
-#     - ssh-add "${SSH_VMS_PRIVATE_KEY}"
-#   script:
-#     - ansible-playbook --private-key "${SSH_VMS_PRIVATE_KEY}" -u "${ANSIBLE_VMS_REMOTE_USER}" -i "${ANSIBLE_INVENTORY}" -e "ansible_python_interpreter=/usr/bin/python3 nginx_conf=${NGINX_CONF} project_dir=${FRONT_PROJECT_DIR} vms_remote_user=${ANSIBLE_VMS_REMOTE_USER}" "${PLAYBOOK_PATH}"
+deploy-frontend:
+  stage: deploy-frontend
+  image: antoineleguillou/nsa-ansible:2.14.1
+  variables:
+    PLAYBOOK_PATH: "${CI_PROJECT_DIR}/frontend_playbook.yml"
+    NGINX_CONF: "${CI_PROJECT_DIR}/nginx/frontend"
+  before_script:
+    - service ssh start
+    - eval $(ssh-agent)
+    - chmod 400 "${SSH_VMS_PRIVATE_KEY}"
+    - ssh-add "${SSH_VMS_PRIVATE_KEY}"
+  script:
+    - ansible-playbook --private-key "${SSH_VMS_PRIVATE_KEY}" -u "${ANSIBLE_VMS_REMOTE_USER}" -i "${ANSIBLE_INVENTORY}" -e "ansible_python_interpreter=/usr/bin/python3 nginx_conf=${NGINX_CONF} project_dir=${FRONT_PROJECT_DIR} vms_remote_user=${ANSIBLE_VMS_REMOTE_USER}" "${PLAYBOOK_PATH}"

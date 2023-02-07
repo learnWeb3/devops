@@ -24,6 +24,7 @@
     - name: Add ppa:ondrej/php repository into sources list
       ansible.builtin.apt_repository:
         repo: ppa:ondrej/php
+        state: present
 
     - name: update repository index
       apt:
@@ -117,9 +118,6 @@
       become: true
       become_user: "{{ vms_remote_user }}"
       shell: cd /app/back && composer update
-
-    # - name: Installing Node JS dependencies
-    #   shell: cd /app/back && npm install
 
     - name: Copy over environnement variables.
       become: true

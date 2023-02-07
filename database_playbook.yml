@@ -32,6 +32,7 @@
     - name: install mysql-server
       apt:
         name: mysql-server
+        state: present
 
     - name: Make mysql server accessible from external hosts
       shell: grep -q "bind-address = 0.0.0.0" /etc/mysql/mysql.conf.d/mysql.cnf; [ $? -eq 0 ] &&  echo "already present" || echo "bind-address = 0.0.0.0" >> /etc/mysql/mysql.conf.d/mysql.cnf
