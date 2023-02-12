@@ -1,7 +1,7 @@
 ---
 # tasks file for project_copy
 
-- name: copying frontend project files
+- name: copying project files
   become: true
   copy:
     src: "{{ project_dir }}"
