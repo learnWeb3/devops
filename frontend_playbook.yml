@@ -7,6 +7,14 @@
       raw: "ln -s /usr/bin/python3 /usr/bin/python"
       register: set_symlink
       failed_when: set_symlink.rc != 0 and set_symlink.rc != 1
+  roles:
+    - role: project_copy
+      vars:
+        destination_folder: /app/
+    - role: expose
+      vars:
+        email_address: antoine.le-guillou@epitech.eu
+        domain_name: nsa-frontend.students-epitech.ovh
   tasks:
     - name: update packages
       become: true
@@ -77,19 +85,6 @@
       become: true
       shell: apt upgrade -y
 
-    - name: copying frontend project files
-      become: true
-      copy:
-        src: "{{ project_dir }}"
-        dest: /app/
-        group: "{{ vms_remote_user }}"
-        owner: "{{ vms_remote_user }}"
-        mode: "0777"
-
-    - name: ensuring frontend project files have correct permissions
-      become: true
-      shell: chmod -R 777 /app/
-
     - name: Installing frontend project dependencies
       become: true
       become_user: "{{ vms_remote_user }}"
@@ -99,58 +94,9 @@
       become: true
       shell: npm install pm2 -g
 
-    - name: Install nginx if not present
-      apt:
-        name: nginx
-        state: present
-        install_recommends: yes
-
-    - name: Install certbot if not present
-      apt:
-        name: certbot
-        state: present
-        install_recommends: yes
-
-    - name: Install python3-certbot-nginx if not present
-      apt:
-        name: python3-certbot-nginx
-        state: present
-        install_recommends: yes
-
-    - name: Make sure a nginx service is running
-      ansible.builtin.systemd:
-        state: started
-        name: nginx
-
-    - name: Copy nginx frontend configuration to host in /etc/nginx/sites-available/ folder
-      become: true
-      copy:
-        src: "{{ nginx_conf }}"
-        dest: /etc/nginx/sites-available/
-        group: "{{ vms_remote_user }}"
-        owner: "{{ vms_remote_user }}"
-        mode: "0777"
-
-    - name: Symlink nginx frontend configuration to /etc/nginx/sites-enabled/
-      become: true
-      shell: ln -sf /etc/nginx/sites-available/frontend /etc/nginx/sites-enabled/
-
-    - name: Confirm the configuration does not contain any syntax errors
-      become: true
-      shell: nginx -t
-
-    - name: Restart service nginx
-      ansible.builtin.service:
-        name: nginx
-        state: restarted
-
     - name: Delete frontend application running process
       shell: cd /app/front && pm2 delete frontend
       ignore_errors: yes
 
     - name: Start frontend application
       shell: cd /app/front && pm2 --name frontend start npm -- start
-
-    - name: Generate site SSL certificates using certbot
-      become: true
-      shell: certbot --nginx --noninteractive --agree-tos -m antoine.le-guillou@epitech.eu --no-redirect --keep-until-expiring -d nsa-frontend.students-epitech.ovh
