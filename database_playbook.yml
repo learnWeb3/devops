@@ -7,14 +7,11 @@
       raw: "ln -s /usr/bin/python3 /usr/bin/python"
       register: set_symlink
       failed_when: set_symlink.rc != 0 and set_symlink.rc != 1
+
+  roles:
+    - role: initialize
+
   tasks:
-    - name: update repository index
-      apt:
-        update_cache: true
-
-    - name: Upgrade all apt packages
-      apt: upgrade=dist force_apt_get=yes
-
     - name: install software-properties-common
       apt:
         name: software-properties-common

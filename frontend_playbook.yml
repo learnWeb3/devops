@@ -7,7 +7,9 @@
       raw: "ln -s /usr/bin/python3 /usr/bin/python"
       register: set_symlink
       failed_when: set_symlink.rc != 0 and set_symlink.rc != 1
+
   roles:
+    - role: initialize
     - role: project_copy
       vars:
         destination_folder: /app/
@@ -15,15 +17,8 @@
       vars:
         email_address: antoine.le-guillou@epitech.eu
         domain_name: nsa-frontend.students-epitech.ovh
+
   tasks:
-    - name: update packages
-      become: true
-      shell: apt update
-
-    - name: upgrade packages
-      become: true
-      shell: apt upgrade -y
-
     - name: Install python2
       apt:
         name: python2
